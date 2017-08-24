@@ -11,8 +11,16 @@
 # Set the Path
 Set-Location -Path c:
 # Refresh Help
-Start-Job -Name "UpdateHelp" -ScriptBlock { Update-Help -Force } | Out-null
+$UpdateHelp = Start-Job -Name "UpdateHelp" -ScriptBlock { Update-Help -Force } 
 Write-Host "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
+
+
+$jobUpdateHelp = Register-ObjectEvent $UpdateHelp StateChanged -Action {
+    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
+    $jobUpdateHelp | Unregister-Event
+    get-job -State Completed | Remove-Job
+}
+
 # Show PS Version and date/time
 Write-host "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
 
@@ -48,8 +56,28 @@ else
 #Import-Module -Name PSReadline
 
 #Import modules
-Start-Job -Name "ImportModules" -ScriptBlock {get-module -ListAvailable | Import-module } | Out-null
+$ImportModules = Start-Job -Name "ImportModules" -ScriptBlock {
+    $modules = get-module -ListAvailable
+
+    foreach ( $module in $Modules )
+    {
+        try
+        {
+            get-module $module | Import-Module
+        }#try
+        catch
+        {
+            Write-Error $Error
+        }#catch
+    }
+ } 
 Write-Host "Importing all modules in background" -ForegroundColor 'DarkGray'
+
+$jobImportModules = Register-ObjectEvent $ImportModules StateChanged -Action {
+    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
+    $jobImportModules | Unregister-Event
+    get-job -State Completed | Remove-Job
+}
 
 #########
 # Alias #
@@ -95,7 +123,7 @@ $currentpath = Get-ScriptDirectory
 . (Join-Path -Path $currentpath -ChildPath "\functions\Show-Object.ps1")
 
 #>
- Start-Job -Name "ImportScripts" -ScriptBlock { 
+ $ImportScripts = Start-Job -Name "ImportScripts" -ScriptBlock { 
 
 	$ErrorActionPreference = "SilentlyContinue"
 	$scriptName = split-path -leaf $MyInvocation.MyCommand.Definition
@@ -116,9 +144,16 @@ $currentpath = Get-ScriptDirectory
 		#write-host $item.FullName
 	}
 	$ErrorActionPreference = "Continue"
- } | Out-null
+ } 
 Write-Host "Importing scripts in background" -ForegroundColor 'DarkGray'   
 	
+$jobImportScripts = Register-ObjectEvent $ImportScripts StateChanged -Action {
+    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
+    $jobImportScripts | Unregister-Event
+    get-job -State Completed | Remove-Job
+}
+
+
 #########
 # Other #
 #########
