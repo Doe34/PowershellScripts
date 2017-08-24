@@ -1,0 +1,5 @@
+- Update windows Powershell folder with github 
+- Backup powershell profile (versions)
+- restore powershell profile (versions)
+- remove specifique modules from import that make the job state blocked --> from the profile 
+    Item that causes blocked state: USC-SCCM.psm1

@@ -48,8 +48,8 @@ else
 #Import-Module -Name PSReadline
 
 #Import modules
-Start-Job -Name "UpdateHelp" -ScriptBlock {get-module -ListAvailable | Import-module } | Out-null
-Write-Host "Importing all modules" -ForegroundColor 'DarkGray'
+Start-Job -Name "ImportModules" -ScriptBlock {get-module -ListAvailable | Import-module } | Out-null
+Write-Host "Importing all modules in background" -ForegroundColor 'DarkGray'
 
 #########
 # Alias #
@@ -95,7 +95,8 @@ $currentpath = Get-ScriptDirectory
 . (Join-Path -Path $currentpath -ChildPath "\functions\Show-Object.ps1")
 
 #>
-    
+ Start-Job -Name "ImportScripts" -ScriptBlock { 
+
 	$ErrorActionPreference = "SilentlyContinue"
 	$scriptName = split-path -leaf $MyInvocation.MyCommand.Definition
 	$rootPath = split-path -parent $MyInvocation.MyCommand.Definition
@@ -115,6 +116,8 @@ $currentpath = Get-ScriptDirectory
 		#write-host $item.FullName
 	}
 	$ErrorActionPreference = "Continue"
+ } | Out-null
+Write-Host "Importing scripts in background" -ForegroundColor 'DarkGray'   
 	
 #########
 # Other #
