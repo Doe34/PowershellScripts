@@ -9,6 +9,8 @@ function Get-AllFunctions
 		. $item.FullName
 		#write-host $item.FullName
 	}
-	
+
+	Write-host "All from the found ps1 files are dot sourced"
 	#return $Return
+
 }

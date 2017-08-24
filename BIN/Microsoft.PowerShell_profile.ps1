@@ -99,7 +99,11 @@ $currentpath = Get-ScriptDirectory
 	$ErrorActionPreference = "SilentlyContinue"
 	$scriptName = split-path -leaf $MyInvocation.MyCommand.Definition
 	$rootPath = split-path -parent $MyInvocation.MyCommand.Definition
+	$IniFiles = gci -re (Join-Path -Path $rootPath -ChildPath "\INI\") -in *.ini
 	$scripts = gci -re $rootPath -in *.ps1 | ?{ $_.Name -ne $scriptName }
+	
+	#read-file *.ini
+	
 	foreach ( $item in $scripts ) {
 		. $item.FullName
 		#write-host $item.FullName
