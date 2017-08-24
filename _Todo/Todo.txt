@@ -5,3 +5,4 @@
     Item that causes blocked state: USC-SCCM.psm1
 - Find exchange servers in domain.
 - create generate powershell setup script (get files from github)
+- add to profile --> remove-itembyage
