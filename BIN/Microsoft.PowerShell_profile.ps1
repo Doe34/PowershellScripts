@@ -100,9 +100,15 @@ $currentpath = Get-ScriptDirectory
 	$scriptName = split-path -leaf $MyInvocation.MyCommand.Definition
 	$rootPath = split-path -parent $MyInvocation.MyCommand.Definition
 	$IniFiles = gci -re (Join-Path -Path $rootPath -ChildPath "\INI\") -in *.ini
-	$scripts = gci -re $rootPath -in *.ps1 | ?{ $_.Name -ne $scriptName }
+			
+	foreach ( $item in $IniFiles ) {
+		if($item.Name -eq "ignore.ini") {$ignore = $item.FullName }
+		if($item.Name -eq "passwords.ini") {$passwords = $item.FullName }
+	}
 	
-	#read-file *.ini
+	$ignorefiles = read-file $ignore
+	
+	$scripts = gci -re $rootPath -in *.ps1 -exclude $ignorefiles | ?{ $_.Name -ne $scriptName }
 	
 	foreach ( $item in $scripts ) {
 		. $item.FullName
