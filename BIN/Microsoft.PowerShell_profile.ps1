@@ -5,6 +5,25 @@
 		Profile File
 #>
 
+
+#############
+# functions #
+#############
+
+function Test-job
+{
+param (
+    [Parameter(Mandatory=$true)]
+    $jobName
+	)
+$job = Register-ObjectEvent $jobName StateChanged -Action {
+    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
+    $jobName | Unregister-Event
+    get-job -State Completed | Remove-Job
+}
+}#Function
+
+
 #########################
 # Window, Path and Help #
 #########################
@@ -14,12 +33,7 @@ Set-Location -Path c:
 $UpdateHelp = Start-Job -Name "UpdateHelp" -ScriptBlock { Update-Help -Force } 
 Write-Host "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
 
-
-$jobUpdateHelp = Register-ObjectEvent $UpdateHelp StateChanged -Action {
-    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
-    $jobUpdateHelp | Unregister-Event
-    get-job -State Completed | Remove-Job
-}
+Test-job $UpdateHelp
 
 # Show PS Version and date/time
 Write-host "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
@@ -73,11 +87,7 @@ $ImportModules = Start-Job -Name "ImportModules" -ScriptBlock {
  } 
 Write-Host "Importing all modules in background" -ForegroundColor 'DarkGray'
 
-$jobImportModules = Register-ObjectEvent $ImportModules StateChanged -Action {
-    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
-    $jobImportModules | Unregister-Event
-    get-job -State Completed | Remove-Job
-}
+Test-job $ImportModules
 
 #########
 # Alias #
@@ -147,11 +157,7 @@ $currentpath = Get-ScriptDirectory
  } 
 Write-Host "Importing scripts in background" -ForegroundColor 'DarkGray'   
 	
-$jobImportScripts = Register-ObjectEvent $ImportScripts StateChanged -Action {
-    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
-    $jobImportScripts | Unregister-Event
-    get-job -State Completed | Remove-Job
-}
+Test-job $ImportScripts
 
 
 #########
