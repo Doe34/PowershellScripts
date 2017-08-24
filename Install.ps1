@@ -23,7 +23,7 @@ if ('' -eq $InstallDirectory)
 
 if (!(Test-Path $InstallDirectory)) {
     $null = mkdir $InstallDirectory
-}in
+}
 
 $wc = New-Object System.Net.WebClient
 $fileList |
