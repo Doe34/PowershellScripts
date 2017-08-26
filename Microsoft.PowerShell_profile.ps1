@@ -33,7 +33,7 @@ Set-Location -Path c:
 $UpdateHelp = Start-Job -Name "UpdateHelp" -ScriptBlock { Update-Help -Force } 
 Write-Host "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
 
-Test-job $UpdateHelp
+#Test-job $UpdateHelp
 
 # Show PS Version and date/time
 Write-host "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
@@ -87,7 +87,7 @@ $ImportModules = Start-Job -Name "ImportModules" -ScriptBlock {
  } 
 Write-Host "Importing all modules in background" -ForegroundColor 'DarkGray'
 
-Test-job $ImportModules
+#Test-job $ImportModules
 
 #########
 # Alias #
@@ -157,7 +157,7 @@ $currentpath = Get-ScriptDirectory
  } 
 Write-Host "Importing scripts in background" -ForegroundColor 'DarkGray'   
 	
-Test-job $ImportScripts
+#Test-job $ImportScripts
 
 
 #########
