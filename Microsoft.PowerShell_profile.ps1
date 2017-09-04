@@ -17,7 +17,7 @@ param (
     $jobName
 	)
 $job = Register-ObjectEvent $jobName StateChanged -Action {
-    Write-Host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
+    write-output ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
     $jobName | Unregister-Event
     get-job -State Completed | Remove-Job
 }
@@ -31,12 +31,12 @@ $job = Register-ObjectEvent $jobName StateChanged -Action {
 Set-Location -Path c:
 # Refresh Help
 $UpdateHelp = Start-Job -Name "UpdateHelp" -ScriptBlock { Update-Help -Force } 
-Write-Host "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
+write-output "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
 
 #Test-job $UpdateHelp
 
 # Show PS Version and date/time
-Write-host "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
+write-output "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
 
 <#
 # Check Admin Elevation
@@ -66,28 +66,7 @@ else
 ##########
 # Module #
 ##########
-#  PSReadLine
-#Import-Module -Name PSReadline
 
-#Import modules
-$ImportModules = Start-Job -Name "ImportModules" -ScriptBlock {
-    $modules = get-module -ListAvailable
-
-    foreach ( $module in $Modules )
-    {
-        try
-        {
-            get-module $module | Import-Module
-        }#try
-        catch
-        {
-            Write-Error $Error
-        }#catch
-    }
- } 
-Write-Host "Importing all modules in background" -ForegroundColor 'DarkGray'
-
-#Test-job $ImportModules
 
 #########
 # Alias #
@@ -133,12 +112,13 @@ $currentpath = Get-ScriptDirectory
 . (Join-Path -Path $currentpath -ChildPath "\functions\Show-Object.ps1")
 
 #>
+<#
  $ImportScripts = Start-Job -Name "ImportScripts" -ScriptBlock { 
 
 	$ErrorActionPreference = "SilentlyContinue"
 	$scriptName = split-path -leaf $MyInvocation.MyCommand.Definition
 	$rootPath = split-path -parent $MyInvocation.MyCommand.Definition
-	$IniFiles = gci -re (Join-Path -Path $rootPath -ChildPath "\INI\") -in *.ini
+	$IniFiles = Get-ChildItem -re (Join-Path -Path $rootPath -ChildPath "\INI\") -in *.ini
 			
 	foreach ( $item in $IniFiles ) {
 		if($item.Name -eq "ignore.ini") {$ignore = $item.FullName }
@@ -147,16 +127,16 @@ $currentpath = Get-ScriptDirectory
 	
 	$ignorefiles = read-file $ignore
 	
-	$scripts = gci -re $rootPath -in *.ps1 -exclude $ignorefiles | ?{ $_.Name -ne $scriptName }
+	$scripts = Get-ChildItem -re $rootPath -in *.ps1 -exclude $ignorefiles | Where-Object { $_.Name -ne $scriptName }
 	
 	foreach ( $item in $scripts ) {
 		. $item.FullName
-		#write-host $item.FullName
+		#write-output $item.FullName
 	}
 	$ErrorActionPreference = "Continue"
  } 
-Write-Host "Importing scripts in background" -ForegroundColor 'DarkGray'   
-	
+write-output "Importing scripts in background" -ForegroundColor 'DarkGray'   
+#>	
 #Test-job $ImportScripts
 
 

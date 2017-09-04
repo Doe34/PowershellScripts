@@ -78,7 +78,7 @@ function remove-itembyage{
         $now=get-date
         $datefilter=$now.adddays(-$days)
         foreach ($file in get-childitem "$path\*" -recurse -force -include $filter | where {$_.PSIsContainer -eq $false -and $_.lastwritetime -le $datefilter -and $_.name -ne "desktop.ini"}){
-            if (!($silent)){write-host "Deleting: $($file.fullname)"}
+            if (!($silent)){write-output "Deleting: $($file.fullname)"}
             remove-item -literalPath $file.fullname -force -ea $ea
         }#end for
     }#end if

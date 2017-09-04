@@ -57,9 +57,9 @@ Function Set-RDExpiration
 			$user | Set-ADUser -AccountExpirationDate $datum.AddDays(1)
 			$user | Set-ADUser -Description $description
 
-			#Write-host $user
-			#write-host $datum.AddDays(1)
-			#write-host $description
+			#write-output $user
+			#write-output $datum.AddDays(1)
+			#write-output $description
 
 		}#TRY
 		CATCH

@@ -43,7 +43,7 @@ namespace PInvoke.Win32 {
 '@
 
 for ( $i = 0; $i -lt 10; $i++ ) {
-    Write-Host ("Last input " + [PInvoke.Win32.UserInput]::LastInput)
-    Write-Host ("Idle for " + [PInvoke.Win32.UserInput]::IdleTime)
+    write-output ("Last input " + [PInvoke.Win32.UserInput]::LastInput)
+    write-output ("Idle for " + [PInvoke.Win32.UserInput]::IdleTime)
     Start-Sleep -Seconds (Get-Random -Minimum 1 -Maximum 5)
 }

@@ -4,11 +4,11 @@
 
 	$Return.scriptName = split-path -leaf $MyInvocation.MyCommand.Definition
 	$Return.rootPath = split-path -parent $MyInvocation.MyCommand.Definition
-	$scripts = gci -re $Return.rootPath -in *.ps1 | ?{ $_.Name -ne $Return.scriptName }
+	$scripts = Get-ChildItem -re $Return.rootPath -in *.ps1 | Where-Object { $_.Name -ne $Return.scriptName }
 	<#
     foreach ( $item in $scripts ) {
 		. $item.FullName
-		#write-host $item.FullName
+		#write-output $item.FullName
 	}
 
     #>
