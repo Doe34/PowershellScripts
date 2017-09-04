@@ -43,3 +43,5 @@ Thumbs.db
 ###################
 # My config files #
 ###################
+passwords.ini
+url.ini
