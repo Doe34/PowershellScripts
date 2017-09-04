@@ -17,7 +17,7 @@ param (
     $jobName
 	)
 $job = Register-ObjectEvent $jobName StateChanged -Action {
-    write-output ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
+    write-host ('Job #{0} ({1}) complete.' -f $sender.Id, $sender.Name) -ForegroundColor 'DarkGray'
     $jobName | Unregister-Event
     get-job -State Completed | Remove-Job
 }
@@ -27,16 +27,18 @@ $job = Register-ObjectEvent $jobName StateChanged -Action {
 #########################
 # Window, Path and Help #
 #########################
+$env:Path += ";" + [environment]::getfolderpath("mydocuments") + "\github\powershellscripts"
+
 # Set the Path
 Set-Location -Path c:
 # Refresh Help
 $UpdateHelp = Start-Job -Name "UpdateHelp" -ScriptBlock { Update-Help -Force } 
-write-output "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
+write-host "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
 
 #Test-job $UpdateHelp
 
 # Show PS Version and date/time
-write-output "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
+write-host "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
 
 <#
 # Check Admin Elevation
@@ -80,39 +82,6 @@ Set-Alias -Name np -Value notepad.exe
 #############
 
 <#
-
-# This will change the prompt
-function prompt
-{
-	#Get-location
-	Write-output "PS [LazyMe]> "
-}
-#>
-
-<#
-
-# Get the current script directory
-function Get-ScriptDirectory
-{
-	
-	if ($hostinvocation -ne $null)
-	{
-		Split-Path $hostinvocation.MyCommand.path
-	}
-	else
-	{
-		Split-Path $script:MyInvocation.MyCommand.Path
-	}
-	
-}
-	
-	
-# DOT Source External Functions
-$currentpath = Get-ScriptDirectory
-. (Join-Path -Path $currentpath -ChildPath "\functions\Show-Object.ps1")
-
-#>
-<#
  $ImportScripts = Start-Job -Name "ImportScripts" -ScriptBlock { 
 
 	$ErrorActionPreference = "SilentlyContinue"
@@ -139,11 +108,58 @@ write-output "Importing scripts in background" -ForegroundColor 'DarkGray'
 #>	
 #Test-job $ImportScripts
 
-
 #########
 # Other #
 #########
 
-# Learn something today (show a random cmdlet help and "about" article
-#Get-Command -Module Microsoft*,Cim*,PS*,ISE | Get-Random | Get-Help -ShowWindow
-#Get-Random -input (Get-Help about*) | Get-Help -ShowWindow
+
+$cleanup = Start-Job -Name "cleanup" -ScriptBlock { . TOOLS_Cleanup.ps1 } 
+write-host "cleaning temp files" -ForegroundColor 'DarkGray'
+
+
+
+$key = "HKcu:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\"
+$download = (Get-ItemProperty -Path $key -name "{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}").'{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}'
+
+
+
+            #Get KnownFolder Paths
+            $appdata=$env:appdata
+            $Cookies=(new-object -com shell.application).namespace(289).Self.Path
+            $History=(new-object -com shell.application).namespace(34).Self.Path
+            $recent=(new-object -com shell.application).namespace(8).Self.Path
+            $profile=$env:userprofile
+
+$CleanItembyage = Start-Job -Name "CleanItembyage" -ScriptBlock { 
+            #commands
+            #remove-itembyage -days 0 -path $appdata -typefilter "txt,log" -silent -whatif
+            remove-itembyage -days 90 -path $cookies -silent 
+            remove-itembyage -days 14 -path $recent -silent 
+            remove-itembyage -days 21 -path $history -silent 
+            remove-itembyage -days 14 -path "$appdata\Microsoft\office\Recent" -silent 
+ } 
+write-host "cleaning temp items by age" -ForegroundColor 'DarkGray'
+
+
+
+
+if (-NOT ("Win32.NativeMethods" -as [type])) {
+Add-Type -MemberDefinition @"
+[DllImport("kernel32.dll", SetLastError=true)]
+public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
+[DllImport("kernel32.dll", SetLastError=true)]
+public static extern IntPtr GetStdHandle(int handle);
+[DllImport("kernel32.dll", SetLastError=true)]
+public static extern bool GetConsoleMode(IntPtr handle, out int mode);
+"@ -Namespace Win32 -Name NativeMethods
+$Handle = [Win32.NativeMethods]::GetStdHandle(-11) #  stdout
+$Mode = 0
+$Result = [Win32.NativeMethods]::GetConsoleMode($Handle, [ref]$Mode)
+$Mode = $Mode -bor 4 # undocumented flag to enable ansi/vt100
+$Result = [Win32.NativeMethods]::SetConsoleMode($Handle, $Mode)
+
+chcp 437
+}
+
+# show me the wheater in brussel
+(curl http://wttr.in/Brussel -UserAgent "curl" ).Content
