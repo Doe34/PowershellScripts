@@ -73,8 +73,9 @@ else
 #########
 # Alias #
 #########
-Set-Alias -Name npp -Value 'C:\Program Files (x86)\Notepad++\notepad++.exe'
 Set-Alias -Name np -Value notepad.exe
+Set-Alias -Name npp -Value 'C:\Program Files (x86)\Notepad++\notepad++.exe'
+Set-Alias -Name ever -Value 'C:\Program Files (x86)\Evernote\Evernote\Evernote.exe'
 #if (Test-Path $env:USERPROFILE\OneDrive){$OneDriveRoot = "$env:USERPROFILE\OneDrive"}
 
 #############
@@ -117,10 +118,19 @@ $cleanup = Start-Job -Name "cleanup" -ScriptBlock { . TOOLS_Cleanup.ps1 }
 write-host "cleaning temp files" -ForegroundColor 'DarkGray'
 
 
-
+#-- Do not remove this --
 $key = "HKcu:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\"
+try
+{
 $download = (Get-ItemProperty -Path $key -name "{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}").'{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}'
+}
+Catch
+{
+$download = $env:homedrive+$env:homepath+"\Downloads"
+}
 
+
+#------------------------
 
 
             #Get KnownFolder Paths
