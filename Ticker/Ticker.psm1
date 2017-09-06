@@ -311,17 +311,14 @@ Param(
 [int]$Refresh=300
 )
 
-#Define an array of powershell commands and cmdlets including active directory cmdlets to display
 
+$sb={ 
 $user = "hln_Be"
 $timeline = get-tweettimeline -Username $user
-$news = ($timeline | select in_reply_to_screen_name,text | where in_reply_to_screen_name -like "").text
-
-#we'll create as a globally scoped variable so you can add to it anytime you want from PowerShell
+$news = ($timeline | select in_reply_to_screen_name,text -first 1 | where in_reply_to_screen_name -like "").text
 $global:cmdletdef=$news
+$global:PSConsoleTitle=$global:cmdletdef }
 
-$sb={ $global:PSConsoleTitle=$global:cmdletdef | get-random }
-#invoke the scriptblock
 Invoke-Command $sb
 
 New-Timer -identifier "SloganUpdate" -action $sb -refresh $refresh
