@@ -75,8 +75,9 @@ import-module -name Ticker
 #########
 # Alias #
 #########
-Set-Alias -Name npp -Value 'C:\Program Files (x86)\Notepad++\notepad++.exe'
 Set-Alias -Name np -Value notepad.exe
+Set-Alias -Name npp -Value 'C:\Program Files (x86)\Notepad++\notepad++.exe'
+Set-Alias -Name ever -Value 'C:\Program Files (x86)\Evernote\Evernote\Evernote.exe'
 #if (Test-Path $env:USERPROFILE\OneDrive){$OneDriveRoot = "$env:USERPROFILE\OneDrive"}
 
 #############
@@ -122,12 +123,30 @@ start-ticker
 $cleanup = Start-Job -Name "cleanup" -ScriptBlock { . TOOLS_Cleanup.ps1 } 
 write-host "cleaning temp files" -ForegroundColor 'DarkGray'
 
+<<<<<<< HEAD
 #########
 
+=======
+
+#-- Do not remove this --
+>>>>>>> 90eb2b7374f7d42321b2e49682c893cdee3f4a00
 $key = "HKcu:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\"
+try
+{
 $download = (Get-ItemProperty -Path $key -name "{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}").'{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}'
+}
+Catch
+{
+$download = $env:homedrive+$env:homepath+"\Downloads"
+}
 
+
+<<<<<<< HEAD
 #########
+=======
+#------------------------
+
+>>>>>>> 90eb2b7374f7d42321b2e49682c893cdee3f4a00
 
             #Get KnownFolder Paths
             $appdata=$env:appdata
