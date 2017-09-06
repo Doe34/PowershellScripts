@@ -27,6 +27,10 @@ $job = Register-ObjectEvent $jobName StateChanged -Action {
 #########################
 # Window, Path and Help #
 #########################
+
+# Show PS Version and date/time
+write-host "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
+
 $env:Path += ";" + [environment]::getfolderpath("mydocuments") + "\github\powershellscripts"
 
 # Set the Path
@@ -36,9 +40,6 @@ $UpdateHelp = Start-Job -Name "UpdateHelp" -ScriptBlock { Update-Help -Force }
 write-host "Updating Help in background (Get-Help to check)" -ForegroundColor 'DarkGray'
 
 #Test-job $UpdateHelp
-
-# Show PS Version and date/time
-write-host "PowerShell Version: $($psversiontable.psversion) - ExecutionPolicy: $(Get-ExecutionPolicy)" -for yellow
 
 <#
 # Check Admin Elevation
@@ -69,6 +70,7 @@ else
 # Module #
 ##########
 
+import-module -name Ticker
 
 #########
 # Alias #
@@ -112,16 +114,20 @@ write-output "Importing scripts in background" -ForegroundColor 'DarkGray'
 # Other #
 #########
 
+start-ticker
+
+
+#########
 
 $cleanup = Start-Job -Name "cleanup" -ScriptBlock { . TOOLS_Cleanup.ps1 } 
 write-host "cleaning temp files" -ForegroundColor 'DarkGray'
 
-
+#########
 
 $key = "HKcu:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\"
 $download = (Get-ItemProperty -Path $key -name "{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}").'{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}'
 
-
+#########
 
             #Get KnownFolder Paths
             $appdata=$env:appdata
@@ -141,6 +147,7 @@ $CleanItembyage = Start-Job -Name "CleanItembyage" -ScriptBlock {
 write-host "cleaning temp items by age" -ForegroundColor 'DarkGray'
 
 
+#########
 
 
 if (-NOT ("Win32.NativeMethods" -as [type])) {
@@ -158,8 +165,8 @@ $Result = [Win32.NativeMethods]::GetConsoleMode($Handle, [ref]$Mode)
 $Mode = $Mode -bor 4 # undocumented flag to enable ansi/vt100
 $Result = [Win32.NativeMethods]::SetConsoleMode($Handle, $Mode)
 
-chcp 437
+#chcp 437
 }
 
 # show me the wheater in brussel
-(curl http://wttr.in/Brussel -UserAgent "curl" ).Content
+(curl http://wttr.in/brussel?0 -UserAgent "curl" ).Content
