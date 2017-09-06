@@ -1,0 +1,8 @@
+$User=
+get-aduser -filter {name -like "USER NAME"} | set-aduser -DisplayName "USER NAME Old"
+get-aduser -filter {name -like "USER NAME"} | Rename-ADObject -NewName "USER NAME Old"
+get-aduser -filter {name -like "USER NAME*"} | Set-ADUser -Surname "NAME Old"
+
+
+
+

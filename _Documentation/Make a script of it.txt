@@ -1,0 +1,37 @@
+$Highlight = @{
+    True = 'Green'
+    False = 'Red'
+}
+
+$User = Get-ADUser "user name"  -Properties Enabled,LockedOut,DisplayName,GivenName,SurName,Mail,LastLogon,Created,passwordlastset,Passwordneverexpires,msDS-UserPasswordExpiryTimeComputed, Description, office, Canonicalname |
+        Select-Object Enabled, 
+        @{Expression={$_.LockedOut};Label='Locked';}, 
+        @{Expression={$_.DisplayName};Label='Display Name';},
+        @{Expression ={$_.GivenName};Label='Name';}, `
+        @{Expression ={$_.SurName}; Label='Last Name'; }, 
+        Mail, 
+        @{Expression ={[DateTime]::FromFileTime($_.LastLogon)}; Label='Last Logon';}, 
+        @{Expression={$_.Created};Label='Date Created';}, 
+        @{Expression={$_.passwordlastset};Label='PW Last Reset';}, 
+        @{Expression={$_.Passwordneverexpires};Label='PW Never Expires';},
+        @{Name="PW Exp Date";Expression={[datetime]::FromFileTime($_."msDS-UserPasswordExpiryTimeComputed")}},
+        Description, 
+        Office,
+        Canonicalname | Format-list | Out-String
+
+$User -split "`n" | ForEach-Object {
+    $Output = $False
+    If ($_ -match 'Enabled|Locked|PW Never Expires') {
+        ForEach ($Entry in $Highlight.Keys){
+            $Text = $_ -split $Entry
+            If ($Text.count -gt 1) { 
+                Write-Host $Text[0] -NoNewline
+                Write-Host $Entry -ForegroundColor $Highlight.$Entry
+                $Output = $true
+                Break
+            }
+        }
+    }
+
+    If (-not $Output) { Write-Host $_ }
+}
