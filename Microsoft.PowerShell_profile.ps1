@@ -78,6 +78,7 @@ import-module -name Ticker
 Set-Alias -Name np -Value notepad.exe
 Set-Alias -Name npp -Value 'C:\Program Files (x86)\Notepad++\notepad++.exe'
 Set-Alias -Name ever -Value 'C:\Program Files (x86)\Evernote\Evernote\Evernote.exe'
+Set-Alias -Name evernote -Value 'C:\Program Files (x86)\Evernote\Evernote\Evernote.exe'
 #if (Test-Path $env:USERPROFILE\OneDrive){$OneDriveRoot = "$env:USERPROFILE\OneDrive"}
 
 #############
