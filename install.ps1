@@ -24,9 +24,12 @@ $Profile = "Microsoft.PowerShell_profile.ps1"
 #Modify profile
 
 
-#Add Destinationpath to the env:path veriable in the profile
+  #Add Destinationpath to the env:path veriable in the profile
+  
+
+  #add install.ps1 to profile so it updates itself
 
 
-#Look for functions and add dot source these files in the profile
+  #Look for functions and add dot source these files in the profile
 
 
