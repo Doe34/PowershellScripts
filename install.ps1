@@ -20,7 +20,7 @@ Remove-Item $Destinationpath\PowershellScripts-master -recurse
 #what is the profile name?
 $Profile = "Microsoft.PowerShell_profile.ps1"
 
-
+$Profile
 #Modify profile
 
   move-item $Destinationpath\$Profile $pshome\$Profile -force -confirm $false
