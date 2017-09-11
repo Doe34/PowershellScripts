@@ -118,6 +118,9 @@ write-output "Importing scripts in background" -ForegroundColor 'DarkGray'
 
 start-ticker
 
+#########
+
+if ($env:computername -match "2169"){ . TOOLS_Start-Omnitracker.ps1 }
 
 #########
 
