@@ -23,18 +23,18 @@ $Profile = "Microsoft.PowerShell_profile.ps1"
 $Profile
 #Modify profile
 
-  move-item $Destinationpath\$Profile $pshome\$Profile -force -confirm $false
+  move-item $Destinationpath\$Profile $pshome\$Profile -force -confirm:$false
   
   #Add Destinationpath to the env:path veriable in the profile
   
   $path  = '$Destinationpath="c:\PowershellScripts"
             $env:Path += ";" + $Destinationpath'
   if(-not (get-content $pshome\$Profile | Select-String -Pattern "Destinationpath")){
-  Add-Content  $pshome\$Profile $path 
+  Add-Content  $pshome\$Profile $path -force
  
   #add install.ps1 so it updates itself
   $install = 'iex (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Doe34/PowershellScripts/master/install.ps1")'
-  Add-Content  $pshome\$Profile $install 
+  Add-Content  $pshome\$Profile $install -force
   }
   
   #Look for functions and add dot source these files in the profile
