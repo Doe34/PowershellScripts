@@ -74,8 +74,8 @@ $Profile
   Add-Content  $pshome\$Profile $path -force
  
   #add install.ps1 so it updates itself
-  $install = 'iex (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Doe34/PowershellScripts/master/install.ps1")'
-  Add-Content  $pshome\$Profile $install -force
+  #$install = 'iex (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Doe34/PowershellScripts/master/install.ps1")'
+  #Add-Content  $pshome\$Profile $install -force
   }
   
   #Look for functions and add dot source these files in the profile
