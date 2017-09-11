@@ -34,8 +34,8 @@ else
    }
  
 # Run your code that needs to be elevated here
-#Write-Host -NoNewLine "Press any key to continue..."
-#$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Write-Host -NoNewLine "Press any key to continue..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 ##############################################################################
 
 
@@ -73,7 +73,7 @@ $Profile = "Microsoft.PowerShell_profile.ps1"
   Add-Content  $pshome\$Profile $path -force
  
   add install.ps1 so it updates itself
-  $install = 'Set-Alias -Name updateps -Value ''iex (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Doe34/PowershellScripts/master/install.ps1")'''
+  $install = 'function updateps {iex (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Doe34/PowershellScripts/master/install.ps1")}'
   Add-Content  $pshome\$Profile $install -force
   }
   
