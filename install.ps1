@@ -72,7 +72,7 @@ $Profile = "Microsoft.PowerShell_profile.ps1"
   if(-not (get-content $pshome\$Profile | Select-String -Pattern "Destinationpath")){
   Add-Content  $pshome\$Profile $path -force
  
-  add install.ps1 so it updates itself
+  #add install.ps1 so it updates itself
   $install = 'function updateps {iex (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Doe34/PowershellScripts/master/install.ps1")}'
   Add-Content  $pshome\$Profile $install -force
   }
