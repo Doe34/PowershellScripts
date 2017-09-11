@@ -53,6 +53,8 @@ Invoke-WebRequest -Uri "https://github.com/Doe34/PowershellScripts/archive/maste
 
 Expand-ZipFile -Path "$temp\install.zip" -DestinationPath $Destinationpath
 
+remove-item $Destinationpath\install.ps1
+
 robocopy $Destinationpath\PowershellScripts-master $Destinationpath\ /e /mov
 
 Remove-Item $Destinationpath\PowershellScripts-master -recurse
