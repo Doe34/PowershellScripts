@@ -13,7 +13,7 @@ $OmnitrackerJob = Start-Job -Name "Omnitracker" -ScriptBlock  {
 			start-process "C:\Program Files (x86)\OMNITRACKER\OMNINET.OMNITRACKER.Client.exe"
 			start-sleep -Milliseconds 500
 			[Microsoft.VisualBasic.Interaction]::AppActivate("OMNITRACKER")
-			start-sleep -Milliseconds 500
+			start-sleep -Milliseconds 1000
 			[System.Windows.Forms.SendKeys]::SendWait("{enter}")
 			sleep 1
 			}
