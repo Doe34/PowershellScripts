@@ -1,5 +1,8 @@
+cd .\Documents\GitHub\PowershellScripts
+
 git pull
 git add .
 git commit -m "updates"
 git push
 git status
+
