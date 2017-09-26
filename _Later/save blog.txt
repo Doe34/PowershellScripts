@@ -1,4 +1,0 @@
-foreach ($blog in $url){
-$file=$blog.split("/")[7]
-(Invoke-WebRequest $blog).content |out-file d:\tsg\$file.html
-}
