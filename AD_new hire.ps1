@@ -25,8 +25,11 @@ $temp = $sameprofile.split(" ")| foreach {if ($_ -match "[a-z][A-Z]"){$_}} ; $sa
 
 $SPA = (get-aduser -filter {name -like $Sameprofile}).samaccountname
 
+$Document.close()
+
 if ($preferredname.length -gt 0){
 echo "New-RDInternalUser -GivenName `"$preferredname`" -SurName `"$name`" -EmployeeID $persnumber -BadgeID $badgenumber -IdenticalProfile $SPA"
 }Else{
 echo "New-RDInternalUser -GivenName `"$firstname`" -SurName `"$name`" -EmployeeID $persnumber -BadgeID $badgenumber -IdenticalProfile $SPA"
 }
+
