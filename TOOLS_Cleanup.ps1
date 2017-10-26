@@ -108,11 +108,3 @@ Write-Verbose "After: $After"
 Write-Verbose $size
 ## Completed Successfully!
 Stop-Transcript } Cleanup
-
-
-Dism.exe /Online /Cleanup-Image /AnalyzeComponentStore
-dism.exe /online /cleanup-image /spsuperseded
-Dism.exe /online /Cleanup-Image /StartComponentCleanup
-Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
-
-
