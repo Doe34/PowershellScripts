@@ -80,6 +80,7 @@ Set-Alias -Name npp -Value 'C:\Program Files (x86)\Notepad++\notepad++.exe'
 Set-Alias -Name ever -Value 'C:\Program Files (x86)\Evernote\Evernote\Evernote.exe'
 Set-Alias -Name evernote -Value 'C:\Program Files (x86)\Evernote\Evernote\Evernote.exe'
 #if (Test-Path $env:USERPROFILE\OneDrive){$OneDriveRoot = "$env:USERPROFILE\OneDrive"}
+if ($env:computername -match "2169"){ Set-Alias -Name texter -Value 'C:\Users\Leppenst\Dropbox\RD\Texter\texter.exe' } 
 
 #############
 # Functions #
