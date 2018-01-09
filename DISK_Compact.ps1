@@ -1,4 +1,2 @@
-{
-Compact /c /s /a /i /q
-Logoff
-}
+Compact *.log /c /s /a /i /q
+

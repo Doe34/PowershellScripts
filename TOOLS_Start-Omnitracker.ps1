@@ -11,11 +11,12 @@ $OmnitrackerJob = Start-Job -Name "Omnitracker" -ScriptBlock  {
 			start-sleep -Milliseconds 500
 
 			start-process "C:\Program Files (x86)\OMNITRACKER\OMNINET.OMNITRACKER.Client.exe"
+			do {
 			start-sleep -Milliseconds 500
+			} while (-not (Get-Process OMNINET.OMNITRACKER.Client | Where-Object {$_.mainWindowTitle -match "OMNITRACKER - Login"}) )
 			[Microsoft.VisualBasic.Interaction]::AppActivate("OMNITRACKER")
-			start-sleep -Milliseconds 1000
+			start-sleep -Milliseconds 500
 			[System.Windows.Forms.SendKeys]::SendWait("{enter}")
-			sleep 1
 			}
 			catch
 			{
